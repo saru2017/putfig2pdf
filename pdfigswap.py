@@ -7,7 +7,7 @@ from datetime import datetime
 from pathlib import Path
 import fitz  # PyMuPDF
 
-PLACEHOLDER_RE = re.compile(r"Insert\s+Figure\s+(\d+)\s+here", re.IGNORECASE)
+PLACEHOLDER_RE = re.compile(r"^([A-Za-z0-9._-]+(?:\.pdf)?)$", re.IGNORECASE)
 
 
 def find_enclosing_rect(page, text_rect, margin=4):
@@ -67,12 +67,14 @@ def replace_placeholders(input_pdf):
                     span_rect = fitz.Rect(span["bbox"])
                     rect = span_rect if rect is None else rect | span_rect
 
-            m = PLACEHOLDER_RE.search(block_text)
+            m = PLACEHOLDER_RE.match(block_text.strip())
             if not m or rect is None:
                 continue
 
-            fig_no = m.group(1)
-            fig_pdf = base_dir / f"fig{fig_no}.pdf"
+            fig_name = m.group(1)
+            if not fig_name.lower().endswith(".pdf"):
+                fig_name = f"{fig_name}.pdf"
+            fig_pdf = base_dir / fig_name
 
             if not fig_pdf.exists():
                 print(f"WARNING: {fig_pdf.name} not found; skipping.")
@@ -80,13 +82,9 @@ def replace_placeholders(input_pdf):
 
             target_rect = find_enclosing_rect(page, rect)
 
-            # Cover the original box and text with white
-            page.draw_rect(
-                target_rect,
-                color=(1, 1, 1),
-                fill=(1, 1, 1),
-                overlay=True,
-            )
+            # Remove the original placeholder box/text from the PDF.
+            page.add_redact_annot(target_rect, fill=(1, 1, 1))
+            page.apply_redactions()
 
             # Place the first page of fig#.pdf at the same position
             fig_doc = fitz.open(fig_pdf)
@@ -99,7 +97,7 @@ def replace_placeholders(input_pdf):
             )
             fig_doc.close()
 
-            print(f"page {page.number + 1}: Insert Figure {fig_no} here -> {fig_pdf.name}")
+            print(f"page {page.number + 1}: {fig_pdf.name} -> {fig_pdf.name}")
 
     doc.save(output_pdf, garbage=4, deflate=True)
     doc.close()
