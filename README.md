@@ -2,11 +2,11 @@
 
 **English** | [日本語](README.ja.md)
 
-Replace filename-only placeholders (for example `fig6.pdf`) in a manuscript PDF with the matching PDF from the same folder—at the same position and size—without rasterizing figures. Vector PDF pages stay vector when embedded.
+Replace filename-only placeholders that **start with `#`** (for example `#fig6.pdf`) in a manuscript PDF with the matching PDF from the same folder—at the same position and size—without rasterizing figures. Vector PDF pages stay vector when embedded. The leading `#` is not part of the file name on disk. Bare filenames such as `fig6.pdf` (no `#`) are **not** treated as placeholders and are left unchanged.
 
 ## Motivation
 
-A typical workflow: export the Word document to PDF (e.g. via PrimoPDF), use **Insert → Shapes** in Word to place a rectangle labeled only with a filename such as `fig6.pdf`, then swap that box for the real figure PDF. This script automates that last step on the PDF so you avoid pasting mixed vector/raster artwork into Word and losing vector quality.
+A typical workflow: export the Word document to PDF (e.g. via PrimoPDF), use **Insert → Shapes** in Word to place a rectangle labeled only with a placeholder such as `#fig6.pdf`, then swap that box for the real figure PDF. This script automates that last step on the PDF so you avoid pasting mixed vector/raster artwork into Word and losing vector quality.
 
 ## Requirements
 
@@ -30,15 +30,15 @@ Put the manuscript and figure PDFs in the **same directory** as the input file, 
 - `manuscript.pdf`
 - `fig1.pdf`, `fig2.pdf`, `my-plot.pdf`, …
 
-Placeholders in the PDF must be just the filename text (case-insensitive):
-
-`<filename or filename.pdf>`
+Placeholders in the PDF must be `#` followed by the file name only (case-insensitive). The `#` marks the slot for replacement; it is not part of the file name on disk. The same text **without** `#` is ignored (no replacement).
 
 Examples:
 
-- `fig6` -> `fig6.pdf`
-- `fig6.pdf` -> `fig6.pdf`
-- `my-plot.pdf` -> `my-plot.pdf`
+- `#fig6` -> `fig6.pdf`
+- `#fig6.pdf` -> `fig6.pdf`
+- `#fig1.pdf` -> `fig1.pdf`
+- `#my-plot.pdf` -> `my-plot.pdf`
+- `fig6.pdf` (no `#`) -> not replaced
 
 ### Output
 

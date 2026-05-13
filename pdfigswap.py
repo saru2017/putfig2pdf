@@ -7,7 +7,13 @@ from datetime import datetime
 from pathlib import Path
 import fitz  # PyMuPDF
 
-PLACEHOLDER_RE = re.compile(r"^([A-Za-z0-9._-]+(?:\.pdf)?)$", re.IGNORECASE)
+# A leading "#" in the manuscript PDF is required; it is stripped when resolving
+# the file on disk (e.g. "#fig1.pdf" in the PDF -> fig1.pdf next to the input).
+# Text that looks like a filename but has no leading "#" is not replaced.
+PLACEHOLDER_RE = re.compile(
+    r"^#([A-Za-z0-9._-]+(?:\.pdf)?)$",
+    re.IGNORECASE,
+)
 
 
 def find_enclosing_rect(page, text_rect, margin=4):
@@ -97,7 +103,8 @@ def replace_placeholders(input_pdf):
             )
             fig_doc.close()
 
-            print(f"page {page.number + 1}: {fig_pdf.name} -> {fig_pdf.name}")
+            placeholder = block_text.strip()
+            print(f"page {page.number + 1}: {placeholder} -> {fig_pdf.name}")
 
     doc.save(output_pdf, garbage=4, deflate=True)
     doc.close()
