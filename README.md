@@ -1,4 +1,4 @@
-# pdfigswap
+# putfig2pdf
 
 **English** | [日本語](README.ja.md)
 
@@ -20,7 +20,7 @@ pip install pymupdf
 ## Usage
 
 ```bash
-python pdfigswap.py manuscript.pdf
+python putfig2pdf.py manuscript.pdf
 ```
 
 ### Layout

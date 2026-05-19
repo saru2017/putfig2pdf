@@ -1,4 +1,4 @@
-# pdfigswap.py
+# putfig2pdf.py
 # pip install pymupdf
 
 import re
@@ -92,7 +92,7 @@ def replace_placeholders(input_pdf):
             page.add_redact_annot(target_rect, fill=(1, 1, 1))
             page.apply_redactions()
 
-            # Place the first page of fig#.pdf at the same position
+            # Place the first page of the figure PDF at the same position
             fig_doc = fitz.open(fig_pdf)
             page.show_pdf_page(
                 target_rect,
@@ -114,7 +114,7 @@ def replace_placeholders(input_pdf):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python pdfigswap.py manuscript.pdf")
+        print("Usage: python putfig2pdf.py manuscript.pdf")
         sys.exit(1)
 
     replace_placeholders(sys.argv[1])
