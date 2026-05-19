@@ -53,6 +53,13 @@ The script writes `<stem>_fig_replaced_<YYYYMMDD_HHMMSS>.pdf` next to the input 
 
 Missing target PDF files are skipped with a warning.
 
+## Demo
+
+A sample manuscript, figure PDFs, and example output are in the [`demo/`](demo/) folder.
+
+- [Demo guide (English)](demo/README.md)
+- [デモの説明（日本語）](demo/README.ja.md)
+
 ## License
 
 Add your preferred license when you publish the repository.

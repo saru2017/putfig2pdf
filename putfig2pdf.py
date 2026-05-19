@@ -3,6 +3,7 @@
 
 import re
 import sys
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 import fitz  # PyMuPDF
@@ -73,7 +74,8 @@ def replace_placeholders(input_pdf):
                     span_rect = fitz.Rect(span["bbox"])
                     rect = span_rect if rect is None else rect | span_rect
 
-            m = PLACEHOLDER_RE.match(block_text.strip())
+            text = unicodedata.normalize("NFKC", block_text.strip())
+            m = PLACEHOLDER_RE.match(text)
             if not m or rect is None:
                 continue
 
@@ -103,7 +105,7 @@ def replace_placeholders(input_pdf):
             )
             fig_doc.close()
 
-            placeholder = block_text.strip()
+            placeholder = text
             print(f"page {page.number + 1}: {placeholder} -> {fig_pdf.name}")
 
     doc.save(output_pdf, garbage=4, deflate=True)

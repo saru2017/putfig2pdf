@@ -53,6 +53,13 @@ python putfig2pdf.py manuscript.pdf
 
 対応する PDF ファイルが見つからない場合は警告を出してスキップします。
 
+## デモ
+
+サンプル原稿・図 PDF・実行結果の例は [`demo/`](demo/) にあります。
+
+- [デモの説明（日本語）](demo/README.ja.md)
+- [Demo guide (English)](demo/README.md)
+
 ## ライセンス
 
 公開時にリポジトリに合わせたライセンスを記載してください。
